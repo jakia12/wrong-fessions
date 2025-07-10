@@ -7,6 +7,8 @@ import { TrollFession } from "./models";
 import { dbConnect } from "./mongoose";
 import VoteButtons from "./vote-buttons";
 
+import bg from "@/public/bg.jpg";
+
 // Server Action: Create a new troll-fession
 async function createTrollFession(formData) {
   "use server";
@@ -83,8 +85,15 @@ export default async function Page() {
   const { top3, recent } = getTop3AndRecent(trollFessions);
   return (
     <div className="relative">
-      <div className="absolute inset-0 left-0 top-0 w-full h-full z-0">
-        <Image src="/bg.jpg" alt="Background" fill className="object-cover" />
+      {/* Background */}
+      <div className="fixed inset-0 z-0">
+        <Image
+          src={bg}
+          alt="Background"
+          className="object-cover w-full h-full"
+          fill
+          priority
+        />
         <div
           className="absolute inset-0"
           style={{
