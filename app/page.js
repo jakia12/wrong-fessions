@@ -1,57 +1,11 @@
 export const dynamic = "force-dynamic";
 
-import { revalidatePath } from "next/cache";
 import Image from "next/image";
 import { TrollFession } from "./models";
 import { dbConnect } from "./mongoose";
 
 import bg from "@/public/bg.jpg";
-import AutoRefresh from "./auto-refresh";
 import DynamicContent from "./dynamic-content";
-
-// Server Action: Create a new troll-fession
-async function createTrollFession(formData) {
-  "use server";
-  const content = formData.get("content");
-  if (
-    !content ||
-    typeof content !== "string" ||
-    content.length === 0 ||
-    content.length > 500
-  )
-    return;
-  await dbConnect();
-  await TrollFession.create({ content });
-  revalidatePath("/");
-}
-
-// Server Action: Like/dislike a troll-fession
-async function voteTrollFession(id, type) {
-  "use server";
-  await dbConnect();
-  const update =
-    type === "like" ? { $inc: { likes: 1 } } : { $inc: { dislikes: 1 } };
-  await TrollFession.findByIdAndUpdate(id, update);
-  revalidatePath("/");
-}
-
-// Server Action: Reply to a troll-fession
-async function replyTrollFession(id, formData) {
-  "use server";
-  const content = formData.get("reply");
-  if (
-    !content ||
-    typeof content !== "string" ||
-    content.length === 0 ||
-    content.length > 500
-  )
-    return;
-  await dbConnect();
-  await TrollFession.findByIdAndUpdate(id, {
-    $push: { replies: { content } },
-  });
-  revalidatePath("/");
-}
 
 // Fetch all troll-fessions
 async function getTrollFessions() {
@@ -62,30 +16,49 @@ async function getTrollFessions() {
 function getTop3AndRecent(trollFessions) {
   const now = Date.now();
   const DAY = 24 * 60 * 60 * 1000;
+
   // Only consider posts from last 24h for top 3
   const recent24h = trollFessions.filter(
     (t) => now - new Date(t.createdAt).getTime() < DAY
   );
-  // Sort by (likes + replies.length)
-  const sorted = [...recent24h].sort(
-    (a, b) =>
-      b.likes + (b.replies?.length || 0) - (a.likes + (a.replies?.length || 0))
-  );
+
+  // Calculate engagement score (likes + comments) for each post
+  const postsWithScore = recent24h.map((post) => ({
+    ...post,
+    engagementScore: (post.likes || 0) + (post.replies?.length || 0),
+  }));
+
+  // Sort by engagement score (likes + comments), then by likes, then by creation date
+  const sorted = postsWithScore.sort((a, b) => {
+    // First sort by total engagement score
+    if (b.engagementScore !== a.engagementScore) {
+      return b.engagementScore - a.engagementScore;
+    }
+    // If engagement is equal, sort by likes
+    if (b.likes !== a.likes) {
+      return b.likes - a.likes;
+    }
+    // If likes are equal, sort by creation date (newer first)
+    return new Date(b.createdAt) - new Date(a.createdAt);
+  });
+
   const top3 = sorted.slice(0, 3);
+
   // Exclude top3 from recent
   const top3Ids = new Set(top3.map((t) => t._id.toString()));
   const recent = trollFessions
     .filter((t) => !top3Ids.has(t._id.toString()))
     .slice(0, 100);
+
   return { top3, recent };
 }
 
 export default async function Page() {
   const trollFessions = await getTrollFessions();
   const { top3, recent } = getTop3AndRecent(trollFessions);
+
   return (
     <div className="relative">
-      <AutoRefresh />
       {/* Background */}
       <div className="fixed inset-0 z-0">
         <div className="relative w-full h-full">
@@ -128,11 +101,7 @@ export default async function Page() {
           </p>
         </header>
 
-        <DynamicContent
-          initialTop3={top3}
-          initialRecent={recent}
-          createTrollFession={createTrollFession}
-        />
+        <DynamicContent initialTop3={top3} initialRecent={recent} />
 
         {/* HOW IT WORKS SECTION */}
         <section className="w-full max-w-4xl my-10">
