@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import { ToastContainer } from "./toast";
 
-export default function TrollFessionForm({ createTrollFession }) {
+export default function TrollFessionForm({ createTrollFession, onDataUpdate }) {
   const [isPending, startTransition] = useTransition();
   const [toasts, setToasts] = useState([]);
 
@@ -21,9 +21,25 @@ export default function TrollFessionForm({ createTrollFession }) {
       try {
         await createTrollFession(formData);
         addToast("Wrong-fession submitted successfully!", "success");
+
         // Reset form
         const form = document.getElementById("troll-fession-form");
         if (form) form.reset();
+
+        // Trigger immediate data refresh
+        if (onDataUpdate) {
+          try {
+            const response = await fetch("/api/refresh-data");
+            if (response.ok) {
+              const result = await response.json();
+              if (result.success && result.data) {
+                onDataUpdate(result.data);
+              }
+            }
+          } catch (error) {
+            console.error("Failed to refresh data after submission:", error);
+          }
+        }
       } catch (error) {
         addToast("Failed to submit wrong-fession. Please try again.", "error");
       }
