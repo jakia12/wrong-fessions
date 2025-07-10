@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { revalidatePath } from "next/cache";
 import Image from "next/image";
 import CommentReplyToggle from "./comment-reply-toggle";
