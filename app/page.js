@@ -53,9 +53,18 @@ function getTop3AndRecent(trollFessions) {
   return { top3, recent };
 }
 
+// Serialize MongoDB objects to plain objects
+function serializeData(data) {
+  return JSON.parse(JSON.stringify(data));
+}
+
 export default async function Page() {
   const trollFessions = await getTrollFessions();
   const { top3, recent } = getTop3AndRecent(trollFessions);
+
+  // Serialize the data before passing to client components
+  const serializedTop3 = serializeData(top3);
+  const serializedRecent = serializeData(recent);
 
   return (
     <div className="relative">
@@ -101,7 +110,10 @@ export default async function Page() {
           </p>
         </header>
 
-        <DynamicContent initialTop3={top3} initialRecent={recent} />
+        <DynamicContent
+          initialTop3={serializedTop3}
+          initialRecent={serializedRecent}
+        />
 
         {/* HOW IT WORKS SECTION */}
         <section className="w-full max-w-4xl my-10">
