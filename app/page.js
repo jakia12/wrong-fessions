@@ -322,9 +322,9 @@ export default async function Page() {
             ))}
           </div>
           <div className="text-center text-xs text-[#aaa] mt-4">
-            Showing 100 most recent wrong-fessions from Supabase
+            Showing 100 most recent wrong-fessions from our database
             <br />
-            Auto-refreshes every 30 seconds • Data persists permanently in
+            Auto-refreshes every 15 seconds • Data persists permanently in
             database
             <br />
             All posts and comments are stored permanently and never disappear
@@ -343,7 +343,7 @@ export default async function Page() {
             <div className="border border-[#d6ff00] rounded p-4 text-center">
               <span className="text-[#00ff00] font-bold">1. WRITE</span>
               <div className="mt-2 text-white">
-                Share your thoughts, confessions, or troll moments anonymously
+                Share your thoughts, confessions, or wrong moments anonymously
               </div>
             </div>
             <div className="border border-[#d6ff00] rounded p-4 text-center">
