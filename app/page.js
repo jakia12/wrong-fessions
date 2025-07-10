@@ -8,6 +8,7 @@ import { dbConnect } from "./mongoose";
 import VoteButtons from "./vote-buttons";
 
 import bg from "@/public/bg.jpg";
+import TrollFessionForm from "./troll-fession-form";
 
 // Server Action: Create a new troll-fession
 async function createTrollFession(formData) {
@@ -87,13 +88,15 @@ export default async function Page() {
     <div className="relative">
       {/* Background */}
       <div className="fixed inset-0 z-0">
-        <Image
-          src={bg}
-          alt="Background"
-          className="object-cover w-full h-full"
-          fill
-          priority
-        />
+        <div className="relative w-full h-full">
+          <Image
+            src={bg}
+            alt="Background"
+            className="object-cover"
+            fill
+            priority
+          />
+        </div>
         <div
           className="absolute inset-0"
           style={{
@@ -121,57 +124,7 @@ export default async function Page() {
           </p>
         </header>
 
-        <section className="w-full max-w-xl bg-[#00000080] border-2 border-[color:var(--color-primary)] rounded-lg p-6 mb-10 shadow-lg">
-          <form action={createTrollFession} className="flex flex-col gap-3 ">
-            <label
-              htmlFor="content"
-              className="[color:var(--color-primary)] font-bold"
-            >
-              <span className="inline-flex items-center gap-2">
-                SHARE YOUR{" "}
-                <span className="[color:var(--color-secondary)]">
-                  WRONG-FESSION
-                </span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="inline-block ml-1"
-                  width="20"
-                  height="20"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  style={{ color: "var(--color-secondary)" }}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 8.25V6a3 3 0 00-6 0v2.25M12 15v-6m0 0l-3 3m3-3l3 3M19.5 12a7.5 7.5 0 11-15 0 7.5 7.5 0 0115 0z"
-                  />
-                </svg>
-              </span>
-            </label>
-            <textarea
-              id="content"
-              name="content"
-              maxLength={500}
-              required
-              className="bg-[#00000080] border border-[color:var(--color-primary)] rounded p-2 [color:var(--color-primary)] resize-none focus:outline-none focus:ring-2 focus:ring-[color:var(--color-secondary)]"
-              placeholder="Share your anonymous confession, thoughts, or wrong moments..."
-              rows={4}
-            />
-            <button
-              type="submit"
-              className="mt-2 bg-[color:var(--color-primary)] text-black font-bold py-2 rounded border-2 border-[color:var(--color-secondary)] hover:bg-[color:var(--color-secondary)] hover:text-black transition"
-            >
-              SUBMIT WRONG-FESSION
-            </button>
-            <p className="text-xs text-[#aaa] mt-2">
-              Fully anonymous – no login required. Visible to all. Never deleted
-              unless by admin.
-            </p>
-          </form>
-        </section>
+        <TrollFessionForm createTrollFession={createTrollFession} />
         {/* TOP 3 SECTION */}
         <section className="w-full max-w-2xl mb-10 ">
           <h2 className="text-2xl font-bold text-center mb-6 [color:var(--color-primary)] flex items-center justify-center gap-3">
