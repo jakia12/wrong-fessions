@@ -278,7 +278,7 @@ export default async function Page() {
           </div>
           <div className="text-center text-xs text-[#aaa] mt-4">
             Most upvoted confessions from the past 24 hours • Updates daily from
-            Supabase.
+            Database.
           </div>
         </section>
 
