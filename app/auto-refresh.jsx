@@ -2,19 +2,47 @@
 
 import { useEffect, useState } from "react";
 
-export default function AutoRefresh() {
+export default function AutoRefresh({ onDataUpdate }) {
   const [countdown, setCountdown] = useState(15);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const fetchNewData = async () => {
+    if (isLoading) return;
+
+    setIsLoading(true);
+    try {
+      // Fetch new data from the API
+      const response = await fetch("/api/refresh-data", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        const newData = await response.json();
+        // Call the callback to update the parent component
+        if (onDataUpdate) {
+          onDataUpdate(newData);
+        }
+      }
+    } catch (error) {
+      console.error("Failed to fetch new data:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
-      window.location.reload();
+      fetchNewData();
     }, 15000); // 15 seconds
 
     // Countdown timer
     const countdownInterval = setInterval(() => {
       setCountdown((prev) => {
         if (prev <= 1) {
-          return 15; // Reset to 15 when page refreshes
+          return 15; // Reset to 15
         }
         return prev - 1;
       });
@@ -24,13 +52,13 @@ export default function AutoRefresh() {
       clearInterval(interval);
       clearInterval(countdownInterval);
     };
-  }, []);
+  }, [isLoading, onDataUpdate]);
 
   return (
-    <div className="fixed top-4 left-4 z-50 bg-[#00000080] border border-[color:var(--color-primary)] rounded-lg px-3 py-2 text-xs">
+    <div className="fixed top-4 left-4 z-[9999] bg-[#000000c4] border border-[color:var(--color-primary)] rounded-lg px-3 py-2 text-xs">
       <div className="flex items-center gap-2">
         <svg
-          className="animate-spin h-3 w-3"
+          className={`h-3 w-3 ${isLoading ? "animate-spin" : "animate-spin"}`}
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
@@ -51,10 +79,18 @@ export default function AutoRefresh() {
           ></path>
         </svg>
         <span className="[color:var(--color-primary)]">
-          Auto-refresh in{" "}
-          <span className="[color:var(--color-secondary)] font-bold">
-            {countdown}s
-          </span>
+          {isLoading ? (
+            <span className="[color:var(--color-secondary)] font-bold">
+              Updating...
+            </span>
+          ) : (
+            <>
+              Auto-refresh in{" "}
+              <span className="[color:var(--color-secondary)] font-bold">
+                {countdown}s
+              </span>
+            </>
+          )}
         </span>
       </div>
     </div>

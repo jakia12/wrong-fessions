@@ -122,7 +122,7 @@ export default async function Page() {
           </p>
           <p className="text-xs text-[#aaa]">
             Warning: Everything posted on this message board is anonymous and
-            cannot be verified. Troll at your own risk.
+            cannot be verified. Wrong-fession at your own risk.
           </p>
           <p className="text-xs [color:var(--color-secondary)] mt-1">
             Our website updates every 15 seconds to show the latest
