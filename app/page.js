@@ -5,10 +5,11 @@ import Image from "next/image";
 import CommentReplyToggle from "./comment-reply-toggle";
 import { TrollFession } from "./models";
 import { dbConnect } from "./mongoose";
+import TrollFessionForm from "./troll-fession-form";
 import VoteButtons from "./vote-buttons";
 
 import bg from "@/public/bg.jpg";
-import TrollFessionForm from "./troll-fession-form";
+import AutoRefresh from "./auto-refresh";
 
 // Server Action: Create a new troll-fession
 async function createTrollFession(formData) {
@@ -86,6 +87,7 @@ export default async function Page() {
   const { top3, recent } = getTop3AndRecent(trollFessions);
   return (
     <div className="relative">
+      <AutoRefresh />
       {/* Background */}
       <div className="fixed inset-0 z-0">
         <div className="relative w-full h-full">
@@ -121,6 +123,10 @@ export default async function Page() {
           <p className="text-xs text-[#aaa]">
             Warning: Everything posted on this message board is anonymous and
             cannot be verified. Troll at your own risk.
+          </p>
+          <p className="text-xs [color:var(--color-secondary)] mt-1">
+            Our website updates every 15 seconds to show the latest
+            wrong-fessions.
           </p>
         </header>
 
