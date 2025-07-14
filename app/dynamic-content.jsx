@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import AutoRefresh from "./auto-refresh";
 import CommentReplyToggle from "./comment-reply-toggle";
 import TrollFessionForm from "./troll-fession-form";
@@ -9,6 +10,23 @@ export default function DynamicContent({ initialTop3, initialRecent }) {
   return (
     <>
       <AutoRefresh />
+
+      {/* ca and social link */}
+      <div className="w-full max-w-4xl mx-auto  flex items-center justify-center mb-8">
+        <div>
+          <span style={{ wordBreak: "breakAll" }} className="text-sm md:text-[20px] block">
+            CA : 5B8jpiDY6WftBdwEyL3LWwYKeDSVikUpXoSYZhFxbonk
+          </span>
+          <div className="flex items-center justify-center mt-[25px]">
+            <Link
+              href="https://x.com/the_wrongcoin"
+              className="bg-[#F9B923] text-black text-center py-[7px] px-[35px] border-2 border-[#27ABE6] rounded "
+            >
+              Twitter
+            </Link>
+          </div>
+        </div>
+      </div>
 
       <TrollFessionForm />
 

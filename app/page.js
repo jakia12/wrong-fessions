@@ -152,25 +152,7 @@ export default async function Page() {
           </div>
         </section>
 
-        {/* ca and social link */}
-        <div className="w-full max-w-4xl mx-auto  flex items-center justify-center">
-          <div>
-            <span
-              style={{ wordBreak: "breakAll" }}
-              className="text-[20px] block"
-            >
-              CA : 5B8jpiDY6WftBdwEyL3LWwYKeDSVikUpXoSYZhFxbonk
-            </span>
-            <div className="flex items-center justify-center mt-[25px]">
-              <Link
-                href="https://x.com/the_wrongcoin"
-                className="bg-[#F9B923] text-black text-center py-[7px] px-[35px] border-2 border-[#27ABE6] rounded "
-              >
-                Twitter
-              </Link>
-            </div>
-          </div>
-        </div>
+        
 
         <footer className="mt-16 text-xs text-[#aaa] text-center">
           &copy; {new Date().getFullYear()} WRONG-FESSIONS. All rights reserved.
