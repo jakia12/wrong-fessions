@@ -6,6 +6,7 @@ import { dbConnect } from "./mongoose";
 
 import bg from "@/public/bg.jpg";
 import DynamicContent from "./dynamic-content";
+import Link from "next/link";
 
 // Fetch all troll-fessions
 async function getTrollFessions() {
@@ -151,7 +152,7 @@ export default async function Page() {
           </div>
         </section>
 
-                {/* ca and social link */}
+        {/* ca and social link */}
         <div className="w-full max-w-4xl mx-auto  flex items-center justify-center">
           <div>
             <span
